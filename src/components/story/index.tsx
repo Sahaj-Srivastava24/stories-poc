@@ -4,11 +4,12 @@ import { TStorySet, renderStories } from '@/helpers/story-data';
 
 type TStoryProps = {
   isPlaying: boolean
+  currentSlide?: number
   storySet: TStorySet
-  switchToNextStory: () => void
+  switchToNextStory?: () => void
 }
 
-export default function StoriesComponent({ isPlaying, storySet, switchToNextStory }: TStoryProps) {
+export default function StoriesComponent({ isPlaying, currentSlide = 0, storySet, switchToNextStory }: TStoryProps) {
 
   useEffect(() => {
     if (history && history.state) {
@@ -16,11 +17,10 @@ export default function StoriesComponent({ isPlaying, storySet, switchToNextStor
     }
   }, [storySet.hash])
 
-  // console.log(isPlaying)
-
   return (
     <div className='h-full w-full'>
       <Stories
+        currentIndex={currentSlide - 1}
         isPaused={!isPlaying}
         stories={renderStories(storySet.stories)}
         defaultInterval={2500}
@@ -30,7 +30,9 @@ export default function StoriesComponent({ isPlaying, storySet, switchToNextStor
             history.replaceState(null, "", `${storySet.hash}/story-${currIndex + 1}`)
           }
         }}
-        onAllStoriesEnd={switchToNextStory}
+        onAllStoriesEnd={() => {
+          !!switchToNextStory && switchToNextStory()
+        }}
         height="100%"
         width="inherit"
         preloadCount={3}

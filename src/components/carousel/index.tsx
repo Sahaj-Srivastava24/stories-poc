@@ -3,6 +3,7 @@ import StoriesComponent from "../story";
 import { structuredStories } from "@/helpers/story-data";
 import { TImageMapping } from "@/entities/images";
 import { useEffect } from "react";
+import StoryLoader from "../story-loader";
 
 export const Carousel = () => {
 
@@ -58,7 +59,7 @@ export const Carousel = () => {
             className="w-full h-full absolute preserve-3d"
           >
             {structuredStories.map((storySet, index) => {
-              console.log(storySet, currentStory)
+              // console.log(storySet, currentStory)
               return (
                 <div
                   key={index}
@@ -68,15 +69,19 @@ export const Carousel = () => {
                       }deg) translateZ(${radius}px)`,
                   }}
                 >
-                  <StoriesComponent
-                    isPlaying={currentStory === index}
-                    storySet={storySet}
-                    switchToNextStory={() => {
-                      if (currentStory < structuredStories.length - 1)
-                        nextStory(currentStory)
-                      else console.log('dallle')
-                    }}
-                  />
+                  {currentStory === index ? (
+                    <StoriesComponent
+                      isPlaying={currentStory === index}
+                      storySet={storySet}
+                      switchToNextStory={() => {
+                        if (currentStory < structuredStories.length - 1)
+                          nextStory(currentStory)
+                        else console.log('dallle')
+                      }}
+                    />
+                  ) : (
+                    <StoryLoader />
+                  )}
                 </div>
               );
             })}

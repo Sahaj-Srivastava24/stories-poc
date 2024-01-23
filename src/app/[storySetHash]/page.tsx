@@ -1,4 +1,8 @@
-export default function Page({ params }) {
+type PageProps = {
+  storySetHash: string
+}
+
+export default function Page({ params }: { params: PageProps }) {
   console.log(params)
 
   return (

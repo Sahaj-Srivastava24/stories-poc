@@ -59,8 +59,11 @@ export const useCarousel = (data: TStorySet[]) => {
   };
 
   const prevStory = (currentStoryIndex: number) => {
-    if (currentStoryIndex <= 0) return
-
+    if (currentStoryIndex <= 0) {
+      console.log(currentStoryIndex, 0)
+      return
+    }
+    console.log("prevStory called")
     setCurrentStory(data[currentStoryIndex - 1].id);
     rotateYref = hold.current + 90;
     if (carouselRef.current) {
@@ -72,7 +75,11 @@ export const useCarousel = (data: TStorySet[]) => {
   };
 
   const nextStory = (currentStoryIndex: number) => {
-    if (currentStoryIndex >= data.length) return
+    if (currentStoryIndex >= data.length) {
+      console.log(currentStoryIndex, data.length)
+      return
+    }
+    console.log("nextStory called")
     setCurrentStory(data[currentStoryIndex + 1].id);
     rotateYref = hold.current - 90;
     if (carouselRef.current) {
@@ -157,6 +164,7 @@ export const useCarousel = (data: TStorySet[]) => {
       carousel.addEventListener("touchend", end);
     }
   }, []);
+
 
   console.log(currentStory)
 

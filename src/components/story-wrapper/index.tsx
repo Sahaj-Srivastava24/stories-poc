@@ -12,7 +12,7 @@ type WrapperProps = {
 export default function StoryWrapper({ currentStory, radius, nextStory }: WrapperProps) {
 
   function renderStorySet() {
-    
+
     return structuredStories.map((storySet, index) => {
       return (
         <div
@@ -28,9 +28,10 @@ export default function StoryWrapper({ currentStory, radius, nextStory }: Wrappe
               isPlaying={currentStory === index}
               storySet={storySet}
               switchToNextStory={() => {
+                console.log("switchToNextStory called")
+                console.log("exceeded", currentStory, structuredStories.length - 1)
                 if (currentStory < structuredStories.length - 1)
                   nextStory(currentStory)
-                else console.log('dallle')
               }}
             />
           ) : (

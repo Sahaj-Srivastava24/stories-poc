@@ -22,7 +22,8 @@ export const Carousel = () => {
   return (
     <div className="flex items-center gap-10">
       <NavigationButton
-        text={"Prev"}
+        cls="hidden md:block"
+        text={"←"}
         cb={() => {
           console.log("prev clicked")
           prevStory(currentStory)
@@ -39,9 +40,10 @@ export const Carousel = () => {
         />
       </CarouselWrapper>
       <NavigationButton
-        text={"Next"}
+        cls="hidden md:block"
+        text={"→"}
         cb={() => {
-          console.log("prev clicked")
+          console.log("next clicked")
           nextStory(currentStory)
         }}
       />

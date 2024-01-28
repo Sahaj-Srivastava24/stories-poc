@@ -1,33 +1,27 @@
-import { useCarousel } from "./useCarousel";
-import { structuredStories } from "@/helpers/story-data";
-import StoryWrapper from "../story-wrapper";
 import CarouselWrapper from "./Wrapper";
-import NavigationButton from "../navigation";
+import { useCarousel } from "./useCarousel";
+import StoryWrapper from "../story-wrapper";
+import NavigationWrapper from "../navigation";
+import { structuredStories } from "@/helpers/story-data";
 
 export const Carousel = () => {
 
   const {
-    nextImage,
-    prevImage,
+    radius,
+    cellSize,
     nextStory,
     prevStory,
-    imagePosition,
-    cellSize,
-    currentStory,
     carouselRef,
-    radius,
+    currentStory,
   } = useCarousel(structuredStories);
 
-
   return (
-    <div className="flex items-center gap-10">
-      <NavigationButton
-        text={"Prev"}
-        cb={() => {
-          console.log("prev clicked")
-          prevStory(currentStory)
-        }}
-      />
+    <NavigationWrapper
+      show={false} // false to not show navigation button
+      nextCallback={nextStory}
+      currentStory={currentStory}
+      previousCallback={prevStory}
+    >
       <CarouselWrapper
         cellSize={cellSize}
         carouselRef={carouselRef}
@@ -38,13 +32,6 @@ export const Carousel = () => {
           nextStory={nextStory}
         />
       </CarouselWrapper>
-      <NavigationButton
-        text={"Next"}
-        cb={() => {
-          console.log("prev clicked")
-          nextStory(currentStory)
-        }}
-      />
-    </div >
+    </NavigationWrapper>
   );
 };

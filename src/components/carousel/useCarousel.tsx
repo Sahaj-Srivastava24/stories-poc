@@ -19,7 +19,12 @@ export const useCarousel = (data: TStorySet[]) => {
   let current = 0;
   let rotateYref = 0;
 
+  console.log("Current Story", currentStory)
+  console.log("Image Position", imagePosition)
+  console.log("currentStoryRef", currentStoryRef.current)
+
   const nextImage = () => {
+    console.log("nextImage called")
     const currentStoryIndex = getCurrentIndex(data, currentStoryRef);
     const currentPosition = imagePosition.get(currentStoryRef.current) || 0;
     const storyLength =
@@ -43,6 +48,7 @@ export const useCarousel = (data: TStorySet[]) => {
   };
 
   const prevImage = () => {
+    console.log("prevImage called")
     const currentPosition = imagePosition.get(currentStoryRef.current) || 0;
     const currentStoryIndex = getCurrentIndex(data, currentStoryRef);
 
@@ -59,6 +65,7 @@ export const useCarousel = (data: TStorySet[]) => {
   };
 
   const prevStory = (currentStoryIndex: number) => {
+    console.log("prevStory called")
     if (currentStoryIndex <= 0) return
 
     setCurrentStory(data[currentStoryIndex - 1].id);
@@ -72,6 +79,8 @@ export const useCarousel = (data: TStorySet[]) => {
   };
 
   const nextStory = (currentStoryIndex: number) => {
+    console.log("nestStry called")
+
     if (currentStoryIndex >= data.length) return
     setCurrentStory(data[currentStoryIndex + 1].id);
     rotateYref = hold.current - 90;
@@ -83,6 +92,7 @@ export const useCarousel = (data: TStorySet[]) => {
   };
 
   const end = () => {
+    console.log("end called")
     isDown = false;
     if (carouselRef.current) {
       carouselRef.current.style.transition = "transform 0.25s";
@@ -158,8 +168,7 @@ export const useCarousel = (data: TStorySet[]) => {
     }
   }, []);
 
-  console.log(currentStory)
-
+  console.log("------------------------------")
   return {
     nextImage,
     nextStory,

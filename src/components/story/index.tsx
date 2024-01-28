@@ -31,6 +31,7 @@ export default function StoriesComponent({ isPlaying, currentSlide = 0, storySet
           }
         }}
         onAllStoriesEnd={() => {
+          console.log("switchToNextStories called")
           !!switchToNextStory && switchToNextStory()
         }}
         height="100%"

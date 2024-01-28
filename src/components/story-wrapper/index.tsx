@@ -10,28 +10,35 @@ type WrapperProps = {
 }
 
 export default function StoryWrapper({ currentStory, radius, nextStory }: WrapperProps) {
+  const translateCls = `translateZ(${radius}px)`
 
   function renderStorySet() {
-    
     return structuredStories.map((storySet, index) => {
+      const rotateYCls = `rotateY(${index * theta}deg)`
+      const styleObject = {
+        transform: `${rotateYCls} ${translateCls}`
+      }
+
+      const switchToNextStory = () => {
+        if (currentStory < structuredStories.length - 1) {
+          nextStory(currentStory)
+        }
+        else {
+          console.log('No next story. Current story is ', currentStory)
+        }
+      }
+
       return (
         <div
           key={index}
+          style={styleObject}
           className="image-full absolute"
-          style={{
-            transform: `rotateY(${index * theta
-              }deg) translateZ(${radius}px)`,
-          }}
         >
           {currentStory === index ? (
             <StoriesComponent
-              isPlaying={currentStory === index}
               storySet={storySet}
-              switchToNextStory={() => {
-                if (currentStory < structuredStories.length - 1)
-                  nextStory(currentStory)
-                else console.log('dallle')
-              }}
+              isPlaying={currentStory === index}
+              switchToNextStory={switchToNextStory}
             />
           ) : (
             <StoryLoader />

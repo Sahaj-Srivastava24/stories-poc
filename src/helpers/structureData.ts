@@ -7,7 +7,7 @@ export default function structureStories<T>(inputArray: string[]): T[] {
   const resultArrays: T[] = [];
   for (let i = 0; i < 12; i += 3) {
     resultArrays.push({
-      id: (i / 3),
+      id: (i / 3) + 1,
       hash: `story-set-${(i / 3) + 1}`,
       stories: inputArray.slice(i, i + 3)
     } as T);

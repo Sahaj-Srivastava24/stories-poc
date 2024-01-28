@@ -9,16 +9,18 @@ type NavigationProps = {
 }
 
 const NavigationWrapper: React.FC<NavigationProps> = (props) => {
+  const wrapperCls = "w-full h-full sm:w-[auto] sm:h-[auto] flex items-center gap-10"
+
   if (!props.show) {
     return (
-      <div className="flex items-center gap-10">
+      <div className={wrapperCls}>
         {props.children}
       </div>
     )
   }
 
   return (
-    <div className="flex items-center gap-10">
+    <div className={wrapperCls}>
       <NavigationButton
         text={"Prev"}
         cb={() => {

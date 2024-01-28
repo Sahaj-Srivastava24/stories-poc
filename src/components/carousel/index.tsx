@@ -6,7 +6,7 @@ import { structuredStories } from "@/helpers/story-data";
 
 export const Carousel = () => {
 
-  const {
+  const { 
     radius,
     cellSize,
     nextStory,

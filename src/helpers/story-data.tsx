@@ -11,6 +11,8 @@ export type TStorySet = {
 
 const storyData = Object.keys(imageMappings)
 export const structuredStories = structureData<TStorySet>(storyData)
+export const storyHashes = structuredStories.map(story => story.hash)
+
 
 export type Action = (action: string, bufferAction?: boolean) => void;
 

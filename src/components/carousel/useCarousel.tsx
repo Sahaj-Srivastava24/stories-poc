@@ -7,12 +7,13 @@ export const useCarousel = (data: TStorySet[]) => {
   );
   const [cellSize, setCellSize] = useState(400);
 
-  const [currentStory, setCurrentStory] = useState(data[0].id);
+  // For this logic, this has to be 0-indexed
+  const [currentStory, setCurrentStory] = useState(data[0].id - 1);
   const hold = useRef(0);
   const radiusRef = useRef(240 / Math.tan(Math.PI / 4));
 
   const carouselRef = useRef<HTMLDivElement | null>(null);
-  const currentStoryRef = useRef(data[0].id);
+  const currentStoryRef = useRef(data[0].id - 1);
   const [radius, setRadius] = useState(240 / Math.tan(Math.PI / 4));
 
   let isDown = false;
@@ -68,7 +69,7 @@ export const useCarousel = (data: TStorySet[]) => {
     console.log("prevStory called")
     if (currentStoryIndex <= 0) return
 
-    setCurrentStory(data[currentStoryIndex - 1].id);
+    setCurrentStory(data[currentStoryIndex - 1].id - 1);
     rotateYref = hold.current + 90;
     if (carouselRef.current) {
       carouselRef.current.style.transform = `translateZ(-${radiusRef.current
@@ -82,7 +83,7 @@ export const useCarousel = (data: TStorySet[]) => {
     console.log("nestStry called")
 
     if (currentStoryIndex >= data.length) return
-    setCurrentStory(data[currentStoryIndex + 1].id);
+    setCurrentStory(data[currentStoryIndex + 1].id - 1);
     rotateYref = hold.current - 90;
     if (carouselRef.current) {
       carouselRef.current.style.transform = `translateZ(-${radiusRef.current
@@ -183,7 +184,7 @@ export const useCarousel = (data: TStorySet[]) => {
 };
 
 function getCurrentIndex(data: TStorySet[], currentStory: React.MutableRefObject<number>) {
-  return data.findIndex((_data) => _data.id === currentStory.current);
+  return data.findIndex((_data) => (_data.id - 1) === currentStory.current);
 }
 
 export const isLast = (index: number, length: number) => {

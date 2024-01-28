@@ -21,7 +21,7 @@ export default function Page({ params }: { params: PageProps }) {
     )
   }
   return (
-    <div className="h-[70%] w-[30vw]">
+    <div className="h-full w-full sm:h-[75vh] sm:w-[400px]">
       <StoriesComponent currentSlide={parseInt(storyIndex)} isPlaying={true} storySet={storyData} />
     </div>
   )

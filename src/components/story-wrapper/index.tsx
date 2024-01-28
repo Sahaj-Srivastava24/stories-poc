@@ -1,7 +1,9 @@
-import { structuredStories } from "@/helpers/story-data";
+import { TStorySet, storyHashes, structuredStories } from "@/helpers/story-data";
 import StoryLoader from "../story-loader";
 import StoriesComponent from "../story";
 import { theta } from "../carousel/constants";
+import { useEffect } from "react";
+import useStoriesStore from "@/store/useStoriesStore";
 
 type WrapperProps = {
   currentStory: number
@@ -10,12 +12,19 @@ type WrapperProps = {
 }
 
 export default function StoryWrapper({ currentStory, radius, nextStory }: WrapperProps) {
-  const translateCls = `translateZ(${radius}px)`
+  const {initStore} = useStoriesStore()
 
-  function renderStorySet() {
-    return structuredStories.map((storySet, index) => {
+  useEffect(() => {
+    initStore(storyHashes)
+  }, [initStore])
+
+  const populateStorySets = () => {
+    const translateCls = `translateZ(${radius}px)`
+
+    const renderStorySet = (storySet: TStorySet, index: number) => {
       const rotateYCls = `rotateY(${index * theta}deg)`
       const styleObject = {
+        // maintain the order for these transformations!!!
         transform: `${rotateYCls} ${translateCls}`
       }
 
@@ -37,6 +46,7 @@ export default function StoryWrapper({ currentStory, radius, nextStory }: Wrappe
           {currentStory === index ? (
             <StoriesComponent
               storySet={storySet}
+              // currentSlide={}
               isPlaying={currentStory === index}
               switchToNextStory={switchToNextStory}
             />
@@ -45,12 +55,14 @@ export default function StoryWrapper({ currentStory, radius, nextStory }: Wrappe
           )}
         </div>
       )
-    })
+    }
+
+    return structuredStories.map((storySet, index) => renderStorySet(storySet, index))
   }
 
   return (
     <>
-      {renderStorySet()}
+      {populateStorySets()}
     </>
   )
 }

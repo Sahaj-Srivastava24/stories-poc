@@ -12,10 +12,6 @@ const CarouselWrapper: FC<WrapperProps> = ({ cellSize, carouselRef, children }) 
       id="container"
       style={{
         width: cellSize,
-        height: "75vh",
-        backgroundColor: "black",
-        cursor: "pointer",
-        overflow: "hidden",
       }}
       className="relative bg-transparent"
     >

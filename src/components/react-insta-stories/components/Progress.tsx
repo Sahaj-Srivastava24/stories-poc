@@ -1,58 +1,26 @@
-import React, { useContext } from 'react'
-import { ProgressProps, ProgressContext, GlobalCtx } from './../interfaces'
+import { ProgressProps } from './../interfaces'
 import ProgressWrapper from './ProgressWrapper'
-import GlobalContext from "./../context/Global";
-import ProgressCtx from './../context/Progress'
 import useFactsStore from '../store/useFactStore';
+import { useProgressContext } from '../context/Progress';
 
 export default function Progress(props: ProgressProps) {
+    const { width, active } = props
     const { progressStyles } = useFactsStore();
-    const { bufferAction, pause } = useContext<ProgressContext>(ProgressCtx)
+    const { pause, bufferAction } = useProgressContext()
 
     const getProgressStyle = (active: number) => {
-        switch (active) {
-            case 2:
-                return { width: '100%' }
-            case 1:
-                return { transform: `scaleX(${props.count / 100})` }
-            case 0:
-                return { width: 0 }
-            default:
-                return { width: 0 }
-        }
+        if (active === 1) return { transform: `scaleX(${props.count / 100})` }
+        if (active === 2) return { width: '100%' }
+        return { width: 0 }
     }
 
-    const { width, active } = props
     return (
         <ProgressWrapper width={width} pause={pause} bufferAction={bufferAction}>
-            <div
+            <div className='progressbar__inner'
                 style={{
-                    ...styles.inner,
                     ...progressStyles,
                     ...getProgressStyle(active),
                 }} />
         </ProgressWrapper>
     )
-}
-
-
-// TODO: Convert to class to tailwind
-const styles: any = {
-    inner: {
-        background: '#fff',
-        height: '100%',
-        maxWidth: '100%',
-        borderRadius: 2,
-        transformOrigin: 'center left',
-
-        WebkitBackfaceVisibility: 'hidden',
-        MozBackfaceVisibility: 'hidden',
-        msBackfaceVisibility: 'hidden',
-        backfaceVisibility: 'hidden',
-
-        WebkitPerspective: 1000,
-        MozPerspective: 1000,
-        msPerspective: 1000,
-        perspective: 1000
-    }
 }

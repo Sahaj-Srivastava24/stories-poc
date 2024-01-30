@@ -1,21 +1,19 @@
 import "./container.css"
-import { useContext, useState, useRef, useEffect } from "react";
-import StoriesContext from "@/components/react-insta-stories/context/Stories";
-import ProgressContext from "@/components/react-insta-stories/context/Progress";
+import { useState, useRef, useEffect } from "react";
 import Story from "@/components/react-insta-stories/components/Story";
-import ProgressArray from "@/components/react-insta-stories/components/ProgressArray";
+import ProgressContext from "@/components/react-insta-stories/context/Progress";
+import useFactsStore from "@/components/react-insta-stories/store/useFactStore";
 import useIsMounted from "@/components/react-insta-stories/util/use-is-mounted";
 import { usePreLoader } from "@/components/react-insta-stories/util/usePreLoader";
-import {
-  StoriesContext as TStoriesContext,
-} from "@/components/react-insta-stories/interfaces";
-import useFactsStore from "@/components/react-insta-stories/store/useFactStore";
+import { useStoriesContext } from "@/components/react-insta-stories/context/Stories";
+import ProgressArray from "@/components/react-insta-stories/components/ProgressArray";
+import useKeyboardNavigation from "./hooks/useKeyboardNavigation";
 
 export default function Container() {
-  const [currentId, setCurrentId] = useState<number>(0);
   const [pause, setPause] = useState<boolean>(true);
-  const [bufferAction, setBufferAction] = useState<boolean>(true);
+  const [currentId, setCurrentId] = useState<number>(0);
   const [videoDuration, setVideoDuration] = useState<number>(0);
+  const [bufferAction, setBufferAction] = useState<boolean>(true);
   const isMounted = useIsMounted();
 
   let mousedownId = useRef<any>();
@@ -26,17 +24,26 @@ export default function Container() {
     loop,
     currentIndex,
     isPaused,
-    keyboardNavigation,
     preventDefault,
     onAllStoriesEnd,
     onPrevious,
     onNext,
     preloadCount,
-  } = useFactsStore()
-  const { stories } = useContext<TStoriesContext>(StoriesContext);
+    setContextValues
+  } = useFactsStore();
+  const { stories } = useStoriesContext();
 
 
   usePreLoader(stories, currentId, preloadCount);
+  useKeyboardNavigation()
+
+  useEffect(() => {
+    setContextValues({
+      pauseStory,
+      nextStory: next,
+      previousStory: previous
+    })
+  }, [])
 
   useEffect(() => {
     if (typeof currentIndex === "number") {
@@ -58,28 +65,6 @@ export default function Container() {
     }
   }, [isPaused]);
 
-  useEffect(() => {
-    const isClient = typeof window !== "undefined" && window.document;
-    if (
-      isClient &&
-      typeof keyboardNavigation === "boolean" &&
-      keyboardNavigation
-    ) {
-      document.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
-    }
-  }, [keyboardNavigation]);
-
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "ArrowLeft") {
-      previous();
-    } else if (e.key === "ArrowRight") {
-      next({ isSkippedByUser: true });
-    }
-  };
-
   const toggleState = (action: string, bufferAction?: boolean) => {
     setPause(action === "pause");
     setBufferAction(!!bufferAction);
@@ -90,6 +75,10 @@ export default function Container() {
     toggleState("pause", true);
   };
 
+  const pauseStory = () => {
+    toggleState("pause")
+  }
+
   const previous = () => {
     if (onPrevious != undefined) {
       onPrevious();
@@ -97,10 +86,8 @@ export default function Container() {
     setCurrentIdWrapper((prev) => (prev > 0 ? prev - 1 : prev));
   };
 
-  const next = (options?: { isSkippedByUser?: boolean }) => {
-    if (onNext != undefined && options?.isSkippedByUser) {
-      onNext();
-    }
+  const next = () => {
+    onNext()
     // Check if component is mounted - for issue #130 (https://github.com/mohitk05/react-insta-stories/issues/130)
     if (isMounted()) {
       if (loop) {
@@ -130,9 +117,7 @@ export default function Container() {
 
   const debouncePause = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
-    mousedownId.current = setTimeout(() => {
-      toggleState("pause");
-    }, 200);
+    mousedownId.current = setTimeout(pauseStory, 200);
   };
 
   const mouseUp =
@@ -142,7 +127,7 @@ export default function Container() {
       if (pause) {
         toggleState("play");
       } else {
-        type === "next" ? next({ isSkippedByUser: true }) : previous();
+        type === "next" ? next() : previous();
       }
     };
 

@@ -1,15 +1,12 @@
-import React from 'react';
-import {
-	StoriesContext as StoriesContextInterface,
-	Story,
-} from '../interfaces';
+import { createContext, useContext } from 'react';
+import { StoriesContext } from '@/components/react-insta-stories/interfaces';
 
-export const initialContext: { stories: Story[] } = {
+const StoriesContext = createContext<StoriesContext>({
 	stories: [],
-};
+});
 
-const StoriesContext = React.createContext<StoriesContextInterface>(
-	initialContext
-);
+export const useStoriesContext = () => {
+	return useContext<StoriesContext>(StoriesContext)
+}
 
 export default StoriesContext;

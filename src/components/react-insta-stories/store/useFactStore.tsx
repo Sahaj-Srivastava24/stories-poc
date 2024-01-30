@@ -7,7 +7,9 @@ type NumberOrString = number | string
 
 export type TFactsStore = {
   loop: boolean;
-  stories: Story[]
+  nextStory: Function
+  pauseStory: Function
+  previousStory: Function
   onNext: Function;
   header: Function;
   isPaused: boolean;
@@ -29,6 +31,7 @@ export type TFactsStore = {
   onPrevious: Function;
   preventDefault: boolean;
   preloadCount: number;
+
 
   setContextValues: (defaultProps: TPartialFactsStore) => void
 };
@@ -58,7 +61,9 @@ const useFactsStore = create<TFactsStore>((set) => ({
   keyboardNavigation: true,
   preventDefault: true,
   preloadCount: 1,
-  stories: [],
+  pauseStory: () => console.log("pauseStory function not set"),
+  nextStory: () => console.log("nextStory function not set"),
+  previousStory: () => console.log("previousStory function not set"),
 
   setContextValues: (defaultProps: TPartialFactsStore) => set((state) => ({
     ...defaultProps,

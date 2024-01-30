@@ -1,29 +1,29 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import Progress from "./Progress";
-import {
-  ProgressContext,
-  GlobalCtx,
-  StoriesContext as StoriesContextInterface,
-} from "./../interfaces";
-import ProgressCtx from "./../context/Progress";
-import GlobalContext from "./../context/Global";
-import StoriesContext from "./../context/Stories";
-import { timestamp } from "../util/time";
-import useFactsStore from "../store/useFactStore";
+import { useState, useEffect, useRef } from "react";
+import { timestamp } from "@/components/react-insta-stories/util/time";
+import Progress from "@/components/react-insta-stories/components/Progress";
+import useFactsStore from "@/components/react-insta-stories/store/useFactStore";
+import { useStoriesContext } from "@/components/react-insta-stories/context/Stories";
+import { useProgressContext } from "@/components/react-insta-stories/context/Progress";
 
 export default function ProgressArray() {
-  const [count, setCount] = useState<number>(0);
   const lastTime = useRef<number>();
+  const [count, setCount] = useState<number>(0);
 
-  const { currentId, next, videoDuration, pause, bufferAction } =
-    useContext<ProgressContext>(ProgressCtx);
+  const {
+    currentId,
+    next,
+    videoDuration,
+    pause,
+    bufferAction
+  } = useProgressContext();
+
   const {
     defaultInterval,
     onStoryEnd,
     onStoryStart,
     progressContainerStyles,
   } = useFactsStore()
-  const { stories } = useContext<StoriesContextInterface>(StoriesContext);
+  const { stories } = useStoriesContext();
 
 
   useEffect(() => {
@@ -84,8 +84,7 @@ export default function ProgressArray() {
   };
 
   return (
-    <div style={{
-      ...styles.progressArr,
+    <div className="progressbar__wrapper" style={{
       ...progressContainerStyles,
       ...opacityStyles
     }}>
@@ -99,22 +98,4 @@ export default function ProgressArray() {
       ))}
     </div>
   );
-};
-
-// TODO: Convert to class to tailwind
-const styles = {
-  progressArr: {
-    display: "flex",
-    justifyContent: "center",
-    maxWidth: "100%",
-    flexWrap: "nowrap" as const,
-    position: "absolute" as const,
-    width: "98%",
-    padding: 5,
-    paddingTop: 7,
-    alignSelf: "center",
-    zIndex: 1001,
-    filter: "drop-shadow(0 1px 8px #222)",
-    transition: "opacity 400ms ease-in-out",
-  },
 };

@@ -9,7 +9,6 @@ interface StoriesStore {
 
 const onLocalStorageNotAvailable = () => {
   console.log("local storage not available")
-  return {}
 }
 
 

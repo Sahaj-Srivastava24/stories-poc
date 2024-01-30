@@ -1,4 +1,4 @@
-import Stories from 'react-insta-stories';
+import Stories from '@/components/react-insta-stories';
 
 /**
  * This component is not just a loader. The `react-insta-stories` library bugs out
@@ -10,7 +10,7 @@ import Stories from 'react-insta-stories';
 export default function StoryLoader() {
   return (
     <Stories
-      isPaused={true}
+      isPaused={true} // this does not work
       stories={[{
         content: () => {
           return (

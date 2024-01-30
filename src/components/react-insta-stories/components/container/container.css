@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  background: #111;
+  position: relative;
+  user-select: none;
+  flex-direction: column;
+  -webkit-user-select: none;
+}
+
+.overlay {
+  display: flex;
+  width: inherit;
+  height: inherit;
+  position: absolute;
+}

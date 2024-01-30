@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import Stories from 'react-insta-stories';
+import Stories from '@/components/react-insta-stories';
 import { TStorySet, renderStories } from '@/helpers/story-data';
 import useStoriesStore from '@/store/useStoriesStore';
 

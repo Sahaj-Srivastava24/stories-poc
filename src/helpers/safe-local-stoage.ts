@@ -17,7 +17,7 @@ const localStorageAvailable = () => {
   }
 };
 
-const useStorageWhenAvailable = (nativeMethod, args, callback) => {
+const onStorageWhenAvailable = (nativeMethod: string, args: string[], callback: () => string) => {
   if (localStorageAvailable()) {
     return window.localStorage[nativeMethod](...args);
   } else {
@@ -26,17 +26,17 @@ const useStorageWhenAvailable = (nativeMethod, args, callback) => {
 };
 
 const safeLocalStorage = {
-  get: (key, onLocalStorageNotAvailable) => {
-    return useStorageWhenAvailable('getItem', [key], onLocalStorageNotAvailable);
+  get: (key: string, onLocalStorageNotAvailable: () => string) => {
+    return onStorageWhenAvailable('getItem', [key], onLocalStorageNotAvailable);
   },
-  set: (key, value, onLocalStorageNotAvailable) => {
-    useStorageWhenAvailable('setItem', [key, value], onLocalStorageNotAvailable);
+  set: (key: string, value: string, onLocalStorageNotAvailable: () => string) => {
+    onStorageWhenAvailable('setItem', [key, value], onLocalStorageNotAvailable);
   },
-  remove: (key, onLocalStorageNotAvailable) => {
-    useStorageWhenAvailable('removeItem', [key], onLocalStorageNotAvailable);
+  remove: (key: string, onLocalStorageNotAvailable: () => string) => {
+    onStorageWhenAvailable('removeItem', [key], onLocalStorageNotAvailable);
   },
-  removeAll: (onLocalStorageNotAvailable) => {
-    useStorageWhenAvailable('clear', [], onLocalStorageNotAvailable);
+  removeAll: (onLocalStorageNotAvailable: () => string) => {
+    onStorageWhenAvailable('clear', [], onLocalStorageNotAvailable);
   },
 };
 

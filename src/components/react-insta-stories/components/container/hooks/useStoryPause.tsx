@@ -20,6 +20,7 @@ export default function useStoryPause() {
       playStory,
       pauseStory,
     })
+    console.log("functions set")
   }, [])
 
   const toggleState = (action: string, bufferAction?: boolean) => {
@@ -44,6 +45,7 @@ export default function useStoryPause() {
   }
 
   return {
+    storyNavigation: {playStory, pauseStory},
     pause,
     toggleState,
     bufferAction,

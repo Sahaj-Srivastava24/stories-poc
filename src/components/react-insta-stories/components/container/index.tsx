@@ -25,7 +25,7 @@ export default function Container() {
   } = useFactsStore();
   const isMounted = useIsMounted();
   const { stories } = useStoriesContext();
-  const { pause, toggleState, bufferAction } = useStoryPause();
+  const { storyNavigation, pause, toggleState, bufferAction } = useStoryPause();
   const [videoDuration, setVideoDuration] = useState<number>(0);
   const { debouncePause, handleMouseUp } = useMouseInteraction(pause)
   const { currentId, setCurrentId, updateNextStoryIndex } = useStoryIndex(setCurrentIdWrapper)

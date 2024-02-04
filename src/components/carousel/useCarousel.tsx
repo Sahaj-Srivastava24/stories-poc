@@ -151,7 +151,7 @@ export const useCarousel = (data: TStorySet[]) => {
   useEffect(() => {
     const carousel = document.getElementById("carousel") || ({} as Element);
 
-    if (window.screen.width < 480) {
+    if (window.screen.width < 640) {
       setCellSize(window.screen.width);
       setRadius(window.screen.width / 2 / Math.tan(Math.PI / 4));
     }

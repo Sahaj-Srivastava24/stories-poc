@@ -1,6 +1,6 @@
 const localStorageAvailable = () => {
   const inWindow =
-    typeof window !== 'undefined' &&
+    typeof window !== "undefined" &&
     typeof window.localStorage === 'object' &&
     typeof window.localStorage.setItem === 'function';
   if (!inWindow) {

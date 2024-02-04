@@ -167,3 +167,13 @@ export interface ProgressContext {
   pause: boolean;
   next: Function;
 }
+
+export enum MOUSE_CALLBACK_TYPE {
+  NEXT = 'next',
+  PREVIOUS = 'previous'
+}
+
+export enum STORY_STATE_TYPE {
+  PLAY = 'play',
+  PAUSE = 'pause'
+}

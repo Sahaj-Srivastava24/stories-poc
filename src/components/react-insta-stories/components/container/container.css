@@ -14,7 +14,6 @@
   position: absolute;
 }
 
-
 .progressbar__inner {
   background: #fff;
   height: 100%;
@@ -44,4 +43,9 @@
   z-index: 1001;
   filter: drop-shadow(0 1px 8px #222);
   transition: opacity 400ms ease-in-out;
+}
+
+.overlay__pane {
+  width: 50%;
+  z-index: 999;
 }

@@ -1,5 +1,5 @@
 import "./container.css"
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, SetStateAction } from "react";
 import Story from "@/components/react-insta-stories/components/Story";
 import ProgressContext from "@/components/react-insta-stories/context/Progress";
 import useFactsStore from "@/components/react-insta-stories/store/useFactStore";
@@ -7,129 +7,56 @@ import useIsMounted from "@/components/react-insta-stories/util/use-is-mounted";
 import { usePreLoader } from "@/components/react-insta-stories/util/usePreLoader";
 import { useStoriesContext } from "@/components/react-insta-stories/context/Stories";
 import ProgressArray from "@/components/react-insta-stories/components/ProgressArray";
-import useKeyboardNavigation from "./hooks/useKeyboardNavigation";
+import useKeyboardNavigation from "@/components/react-insta-stories/components/container/hooks/useKeyboardNavigation";
+import { MOUSE_CALLBACK_TYPE, STORY_STATE_TYPE } from "@/components/react-insta-stories/interfaces";
+import useMouseInteraction from "@/components/react-insta-stories/components/container/hooks/useMouseInteractions";
+import useStoryPause from "@/components/react-insta-stories/components/container/hooks/useStoryPause";
+import useStoryIndex from "@/components/react-insta-stories/components/container/hooks/useStoryIndex";
 
 export default function Container() {
-  const [pause, setPause] = useState<boolean>(true);
-  const [currentId, setCurrentId] = useState<number>(0);
-  const [videoDuration, setVideoDuration] = useState<number>(0);
-  const [bufferAction, setBufferAction] = useState<boolean>(true);
-  const isMounted = useIsMounted();
-
-  let mousedownId = useRef<any>();
-
   const {
     width,
     height,
-    loop,
-    currentIndex,
-    isPaused,
-    preventDefault,
-    onAllStoriesEnd,
-    onPrevious,
     onNext,
+    onPrevious,
     preloadCount,
+    preventDefault,
     setContextValues
   } = useFactsStore();
+  const isMounted = useIsMounted();
   const { stories } = useStoriesContext();
+  const { pause, toggleState, bufferAction } = useStoryPause();
+  const [videoDuration, setVideoDuration] = useState<number>(0);
+  const { debouncePause, handleMouseUp } = useMouseInteraction(pause)
+  const { currentId, setCurrentId, updateNextStoryIndex } = useStoryIndex(setCurrentIdWrapper)
 
-
-  usePreLoader(stories, currentId, preloadCount);
   useKeyboardNavigation()
+  usePreLoader(stories, currentId, preloadCount);
 
+  // This sets the helper functions so that we can use it later
   useEffect(() => {
+    console.log(nextStory, previousStory)
     setContextValues({
-      pauseStory,
-      nextStory: next,
-      previousStory: previous
+      nextStory: nextStory,
+      previousStory: previousStory
     })
   }, [])
 
-  useEffect(() => {
-    if (typeof currentIndex === "number") {
-      if (currentIndex >= 0 && currentIndex < stories.length) {
-        setCurrentIdWrapper(() => currentIndex);
-      } else {
-        console.error(
-          "Index out of bounds. Current index was set to value more than the length of stories array.",
-          currentIndex
-        );
-      }
-    }
-  }, [currentIndex]);
-
-
-  useEffect(() => {
-    if (typeof isPaused === "boolean") {
-      setPause(isPaused);
-    }
-  }, [isPaused]);
-
-  const toggleState = (action: string, bufferAction?: boolean) => {
-    setPause(action === "pause");
-    setBufferAction(!!bufferAction);
-  };
-
-  const setCurrentIdWrapper = (callback) => {
+  function setCurrentIdWrapper(callback: SetStateAction<number>) {
     setCurrentId(callback);
-    toggleState("pause", true);
+    toggleState(STORY_STATE_TYPE.PAUSE, true);
   };
 
-  const pauseStory = () => {
-    toggleState("pause")
-  }
-
-  const previous = () => {
-    if (onPrevious != undefined) {
-      onPrevious();
-    }
-    setCurrentIdWrapper((prev) => (prev > 0 ? prev - 1 : prev));
+  const previousStory = () => {
+    onPrevious(); // We have default functions, so we dont have to check if they're undefined
+    setCurrentIdWrapper((prev: number) => (prev > 0 ? prev - 1 : prev));
   };
 
-  const next = () => {
-    onNext()
+  const nextStory = () => {
+    onNext(); // We have default functions, so we dont have to check if they're undefined
     // Check if component is mounted - for issue #130 (https://github.com/mohitk05/react-insta-stories/issues/130)
-    if (isMounted()) {
-      if (loop) {
-        updateNextStoryIdForLoop();
-      } else {
-        updateNextStoryId();
-      }
-    }
+    isMounted() && updateNextStoryIndex()
   };
-
-  const updateNextStoryIdForLoop = () => {
-    setCurrentIdWrapper((prev) => {
-      if (prev >= stories.length - 1) {
-        onAllStoriesEnd && onAllStoriesEnd(currentId, stories);
-      }
-      return (prev + 1) % stories.length;
-    });
-  };
-
-  const updateNextStoryId = () => {
-    setCurrentIdWrapper((prev) => {
-      if (prev < stories.length - 1) return prev + 1;
-      onAllStoriesEnd && onAllStoriesEnd(currentId, stories);
-      return prev;
-    });
-  };
-
-  const debouncePause = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    mousedownId.current = setTimeout(pauseStory, 200);
-  };
-
-  const mouseUp =
-    (type: string) => (e: React.MouseEvent | React.TouchEvent) => {
-      e.preventDefault();
-      mousedownId.current && clearTimeout(mousedownId.current);
-      if (pause) {
-        toggleState("play");
-      } else {
-        type === "next" ? next() : previous();
-      }
-    };
 
   const getVideoDuration = (duration: number) => {
     setVideoDuration(duration * 1000);
@@ -143,7 +70,7 @@ export default function Container() {
           videoDuration: videoDuration,
           currentId,
           pause,
-          next,
+          next: nextStory,
         }}
       >
         <ProgressArray />
@@ -158,18 +85,18 @@ export default function Container() {
       {!preventDefault && (
         <div className="overlay">
           <div
-            style={{ width: "50%", zIndex: 999 }}
+            className="overlay__pane"
             onTouchStart={debouncePause}
-            onTouchEnd={mouseUp("previous")}
+            onTouchEnd={handleMouseUp(MOUSE_CALLBACK_TYPE.PREVIOUS)}
             onMouseDown={debouncePause}
-            onMouseUp={mouseUp("previous")}
+            onMouseUp={handleMouseUp(MOUSE_CALLBACK_TYPE.PREVIOUS)}
           />
           <div
-            style={{ width: "50%", zIndex: 999 }}
+            className="overlay__pane"
             onTouchStart={debouncePause}
-            onTouchEnd={mouseUp("next")}
+            onTouchEnd={handleMouseUp(MOUSE_CALLBACK_TYPE.NEXT)}
             onMouseDown={debouncePause}
-            onMouseUp={mouseUp("next")}
+            onMouseUp={handleMouseUp(MOUSE_CALLBACK_TYPE.NEXT)}
           />
         </div>
       )}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import useFactsStore from "@/components/react-insta-stories/store/useFactStore";
 
 export default function useKeyboardNavigation() {
@@ -23,6 +23,4 @@ export default function useKeyboardNavigation() {
       };
     }
   }, [keyboardNavigation, handleKeyDown]);
-
-
 }

@@ -9,6 +9,7 @@ export type TFactsStore = {
   loop: boolean;
   nextStory: Function
   pauseStory: Function
+  playStory: Function
   previousStory: Function
   onNext: Function;
   header: Function;
@@ -31,7 +32,6 @@ export type TFactsStore = {
   onPrevious: Function;
   preventDefault: boolean;
   preloadCount: number;
-
 
   setContextValues: (defaultProps: TPartialFactsStore) => void
 };
@@ -59,9 +59,10 @@ const useFactsStore = create<TFactsStore>((set) => ({
   onNext: () => {},
   onPrevious: () => {},
   keyboardNavigation: true,
-  preventDefault: true,
+  preventDefault: false,
   preloadCount: 1,
   pauseStory: () => console.log("pauseStory function not set"),
+  playStory: () => console.log("playStory function not set"),
   nextStory: () => console.log("nextStory function not set"),
   previousStory: () => console.log("previousStory function not set"),
 

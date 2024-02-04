@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Stories from 'react-insta-stories';
-import { TStorySet, renderStories } from '@/helpers/story-data';
 import useStoriesStore from '@/store/useStoriesStore';
+import { TStorySet, renderStories } from '@/helpers/story-data';
 
 type TStoryProps = {
   isPlaying: boolean
@@ -23,8 +23,8 @@ export default function StoriesComponent({ isPlaying, currentSlide, storySet, sw
     if (currentSlide)
       return currentSlide
 
-    const indexFetchedFromLocalStorage = watchedStories[storySet.hash]
-    if (indexFetchedFromLocalStorage) {
+    if (!!watchedStories && watchedStories[storySet.hash]) {
+      const indexFetchedFromLocalStorage = watchedStories[storySet.hash]
       if (indexFetchedFromLocalStorage >= storySet.stories.length - 1) {
         console.log("All stories watched, restarting from beginning", indexFetchedFromLocalStorage)
       }
@@ -32,7 +32,6 @@ export default function StoriesComponent({ isPlaying, currentSlide, storySet, sw
         return indexFetchedFromLocalStorage
       }
     }
-
     return 0
   }
 

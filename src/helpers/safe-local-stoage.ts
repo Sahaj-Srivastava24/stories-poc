@@ -1,6 +1,6 @@
 const localStorageAvailable = () => {
   const inWindow =
-    !!window &&
+    typeof window !== 'undefined' &&
     typeof window.localStorage === 'object' &&
     typeof window.localStorage.setItem === 'function';
   if (!inWindow) {
@@ -21,7 +21,7 @@ const useStorageWhenAvailable = (nativeMethod, args, callback) => {
   if (localStorageAvailable()) {
     return window.localStorage[nativeMethod](...args);
   } else {
-    callback();
+    return callback();
   }
 };
 

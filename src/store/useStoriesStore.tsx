@@ -1,4 +1,4 @@
-import safeLocalStorage from '@/helpers/sage-local-stoage';
+import safeLocalStorage from '@/helpers/safe-local-stoage';
 import { create } from 'zustand';
 
 interface StoriesStore {
@@ -9,15 +9,21 @@ interface StoriesStore {
 
 const onLocalStorageNotAvailable = () => {
   console.log("local storage not available")
-  return {}
+  return "{}"
 }
 
 
 const useStoriesStore = create<StoriesStore>((set, get) => ({
-  watchedStories: JSON.parse(safeLocalStorage.get('qzp_watched_stories', onLocalStorageNotAvailable)),
+  watchedStories: {},
   initStore: (storySetIds: string[]) => {
     set((state) => {
-      const updatedWatchedStories = { ...state.watchedStories };
+      if(Object.keys(state.watchedStories).length > 0) {
+        console.log("We have some old cache for now, aborting initStore")
+        return state
+      }
+
+      //  When we dont have user data.
+      const updatedWatchedStories = {} as Record<string, number>;
       storySetIds.forEach(id => {
         updatedWatchedStories[id] = 0
       })
@@ -28,7 +34,7 @@ const useStoriesStore = create<StoriesStore>((set, get) => ({
   incrementWatchedStories: (storySetId: string) => {
     set((state) => {
       const updatedWatchedStories = { ...state.watchedStories };
-      updatedWatchedStories[storySetId] = (updatedWatchedStories[storySetId] || 0) + 1;
+      updatedWatchedStories[storySetId] = (updatedWatchedStories[storySetId] ?? 0) + 1;
 
       safeLocalStorage.set('qzp_watched_stories', JSON.stringify(updatedWatchedStories), onLocalStorageNotAvailable);
 

@@ -12,7 +12,7 @@ type WrapperProps = {
 }
 
 export default function StoryWrapper({ currentStory, radius, nextStory }: WrapperProps) {
-  const {initStore} = useStoriesStore()
+  const { initStore } = useStoriesStore()
 
   useEffect(() => {
     initStore(storyHashes)
@@ -37,13 +37,15 @@ export default function StoryWrapper({ currentStory, radius, nextStory }: Wrappe
         }
       }
 
+      console.log(index, "story index")
+
       return (
         <div
           key={index}
           style={styleObject}
           className="image-full absolute"
         >
-          {currentStory === index ? (
+          {/* {currentStory === index ? (
             <StoriesComponent
               storySet={storySet}
               // currentSlide={}
@@ -51,8 +53,8 @@ export default function StoryWrapper({ currentStory, radius, nextStory }: Wrappe
               switchToNextStory={switchToNextStory}
             />
           ) : (
-            <StoryLoader />
-          )}
+          )} */}
+          <StoryLoader />
         </div>
       )
     }

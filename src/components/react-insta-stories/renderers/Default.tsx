@@ -1,10 +1,10 @@
-import * as React from "react";
-import { Renderer, Tester } from "./../interfaces";
+import { useEffect } from "react";
+import { RendererProps, TesterProps } from "./../interfaces";
 
-export const renderer: Renderer = ({ story, action }) => {
-  React.useEffect(() => {
-    action("play");
-  }, [story]);
+export const Renderer: RendererProps = ({ story, action, isPaused }) => {
+  useEffect(() => {
+    !isPaused && action("play");
+  }, [action, story, isPaused]);
 
   return (
     <div style={styles.storyContent}>
@@ -27,14 +27,12 @@ const styles = {
   },
 };
 
-export const tester: Tester = () => {
+export const tester: TesterProps = () => {
   return {
     condition: true,
     priority: 1,
   };
 };
 
-export default {
-  renderer,
-  tester,
-};
+const DefaultRenderer = { Renderer, tester }
+export default DefaultRenderer

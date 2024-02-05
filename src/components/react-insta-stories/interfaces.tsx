@@ -17,8 +17,8 @@ export interface ReactInstaStoriesProps {
   isPaused?: boolean;
   currentIndex?: number;
   renderers?: {
-    renderer: Renderer;
-    tester: Tester;
+    renderer: RendererProps;
+    tester: TesterProps;
   }[];
   onAllStoriesEnd?: Function;
   onStoryStart?: Function;
@@ -46,8 +46,8 @@ export interface GlobalCtx {
   isPaused?: boolean;
   currentIndex?: number;
   renderers?: {
-    renderer: Renderer;
-    tester: Tester;
+    renderer: RendererProps;
+    tester: TesterProps;
   }[];
   onAllStoriesEnd?: Function;
   onStoryStart?: Function;
@@ -73,7 +73,7 @@ export interface ContainerState {
 }
 
 export type Action = (action: string, bufferAction?: boolean) => void;
-export type Renderer = React.FC<{
+export type RendererProps = React.FC<{
   action: Action;
   isPaused: boolean;
   story: Story;
@@ -87,7 +87,7 @@ export type Renderer = React.FC<{
   messageHandler: (type: string, data: any) => { ack: "OK" | "ERROR" };
 }>;
 
-export type Tester = (story: Story) => {
+export type TesterProps = (story: Story) => {
   condition: boolean;
   priority: number;
 };
@@ -116,8 +116,8 @@ export interface Story {
   type?: string;
   duration?: number;
   styles?: object;
-  content?: Renderer;
-  originalContent?: Renderer
+  content?: RendererProps;
+  originalContent?: RendererProps
   // Whether to preload the resource or not, defaults to `true` for images and `false` for videos (video preloading is experimental)
   preloadResource?: boolean;
 }

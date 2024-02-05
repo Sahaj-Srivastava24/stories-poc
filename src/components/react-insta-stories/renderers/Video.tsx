@@ -1,18 +1,18 @@
-import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import Spinner from "../components/Spinner";
-import { Renderer, Tester } from "./../interfaces";
+import { RendererProps, TesterProps } from "./../interfaces";
 import WithHeader from "./wrappers/withHeader";
 import WithSeeMore from "./wrappers/withSeeMore";
 
-export const renderer: Renderer = ({
+export const Renderer: RendererProps = ({
   story,
   action,
   isPaused,
   config,
   messageHandler,
 }) => {
-  const [loaded, setLoaded] = React.useState(false);
-  const [muted, setMuted] = React.useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [muted, setMuted] = useState(false);
   const { width, height, loader, storyStyles } = config;
 
   let computedStyles = {
@@ -20,9 +20,9 @@ export const renderer: Renderer = ({
     ...(storyStyles || {}),
   };
 
-  let vid = React.useRef<HTMLVideoElement>(null);
+  let vid = useRef<HTMLVideoElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (vid.current) {
       if (isPaused) {
         vid.current.pause();
@@ -41,23 +41,23 @@ export const renderer: Renderer = ({
   };
 
   const videoLoaded = () => {
-    messageHandler("UPDATE_VIDEO_DURATION", { duration: vid.current.duration });
+    messageHandler("UPDATE_VIDEO_DURATION", { duration: vid.current!.duration });
     setLoaded(true);
-    vid.current
+    vid.current!
       .play()
       .then(() => {
         action("play");
       })
       .catch(() => {
         setMuted(true);
-        vid.current.play().finally(() => {
+        vid.current!.play().finally(() => {
           action("play");
         });
       });
   };
 
   return (
-    <WithHeader {...{ story, globalHeader: config.header }}>
+    <WithHeader {...{ story, globalHeader: config.header! }}>
       <WithSeeMore {...{ story, action }}>
         <div style={styles.videoContainer}>
           <video
@@ -112,14 +112,12 @@ const styles = {
   },
 };
 
-export const tester: Tester = (story) => {
+export const tester: TesterProps = (story) => {
   return {
     condition: story.type === "video",
     priority: 2,
   };
 };
 
-export default {
-  renderer,
-  tester,
-};
+const VideoRenderer = { Renderer, tester }
+export default VideoRenderer

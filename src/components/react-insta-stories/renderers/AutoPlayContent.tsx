@@ -1,22 +1,28 @@
-import * as React from 'react';
-import { Renderer, Tester } from './../interfaces';
+//TODO: check
 
-export const renderer: Renderer = (props) => {
-    React.useEffect(() => {
-        props.action('play');
-    }, [props.story])
-    const Content = props.story.originalContent;
-    return <Content {...props} />
+import { useEffect } from 'react';
+import { RendererProps, TesterProps } from './../interfaces';
+
+export const Renderer: RendererProps = (props) => {
+    useEffect(() => {
+        !props.isPaused && props.action('play');
+    }, [props])
+
+    if (!!props.story?.originalContent) {
+        const Content = props.story?.originalContent;
+        return <Content {...props} />
+    }
+
+    console.log("Inside AutoPlayContent Rendered, no content")
+    return <div />
 }
 
-export const tester: Tester = (story) => {
+export const tester: TesterProps = (story) => {
     return {
         condition: !!story.content,
         priority: 2
     }
 }
 
-export default {
-    renderer,
-    tester
-}
+const AutoPlayContentRenderer = { Renderer, tester }
+export default AutoPlayContentRenderer

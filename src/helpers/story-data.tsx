@@ -1,6 +1,6 @@
 import imageMappings, { TImageMapping } from "@/entities/images";
 import Image from "next/image"
-import { Story } from "react-insta-stories/dist/interfaces"
+import { Story } from "@/components/react-insta-stories/interfaces"
 import structureData from "./structureData";
 
 export type TStorySet = {

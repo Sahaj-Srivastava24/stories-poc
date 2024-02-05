@@ -1,6 +1,6 @@
-import { Renderer, Story, Tester } from "../interfaces";
+import { RendererProps, Story, TesterProps } from "../interfaces";
 
-export const getRenderer = (story: Story, renderers: { renderer: Renderer, tester: Tester }[]): Renderer => {
+export const getRenderer = (story: Story, renderers: { renderer: RendererProps, tester: TesterProps }[]): RendererProps => {
     let probable = renderers.map(r => {
         return {
             ...r,

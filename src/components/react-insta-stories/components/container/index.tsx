@@ -1,5 +1,5 @@
 import "./container.css"
-import { useState, useRef, useEffect, SetStateAction } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Story from "@/components/react-insta-stories/components/Story";
 import ProgressContext from "@/components/react-insta-stories/context/Progress";
 import useFactsStore from "@/components/react-insta-stories/store/useFactStore";
@@ -8,62 +8,57 @@ import { usePreLoader } from "@/components/react-insta-stories/util/usePreLoader
 import { useStoriesContext } from "@/components/react-insta-stories/context/Stories";
 import ProgressArray from "@/components/react-insta-stories/components/ProgressArray";
 import useKeyboardNavigation from "@/components/react-insta-stories/components/container/hooks/useKeyboardNavigation";
-import { MOUSE_CALLBACK_TYPE, STORY_STATE_TYPE } from "@/components/react-insta-stories/interfaces";
-import useMouseInteraction from "@/components/react-insta-stories/components/container/hooks/useMouseInteractions";
 import useStoryPause from "@/components/react-insta-stories/components/container/hooks/useStoryPause";
 import useStoryIndex from "@/components/react-insta-stories/components/container/hooks/useStoryIndex";
+import Overlay from "@/components/react-insta-stories/components/container/Overlay";
 
 export default function Container() {
-  const {
-    width,
-    height,
-    onNext,
-    onPrevious,
-    preloadCount,
-    preventDefault,
-    setContextValues
-  } = useFactsStore();
+  const factStore = useFactsStore(state => ({
+    containerStyles: {
+      width: state.width,
+      height: state.height
+    },
+    onNext: state.onNext,
+    onPrevious: state.onPrevious,
+    setContextValues: state.setContextValues
+  }));
+
   const isMounted = useIsMounted();
   const { stories } = useStoriesContext();
-  const { storyNavigation, pause, toggleState, bufferAction } = useStoryPause();
+  const { onNext, onPrevious, setContextValues } = factStore;
+  const { pause, toggleState, bufferAction } = useStoryPause();
   const [videoDuration, setVideoDuration] = useState<number>(0);
-  const { debouncePause, handleMouseUp } = useMouseInteraction(pause)
-  const { currentId, setCurrentId, updateNextStoryIndex } = useStoryIndex(setCurrentIdWrapper)
+  const { currentId, setCurrentIdWrapper, updateNextStoryIndex } = useStoryIndex(toggleState)
 
   useKeyboardNavigation()
-  usePreLoader(stories, currentId, preloadCount);
+  usePreLoader(stories, currentId);
+
+  const previousStory = useCallback(() => {
+    onPrevious();
+    setCurrentIdWrapper((prev: number) => (prev > 0 ? prev - 1 : prev));
+  }, [onPrevious, setCurrentIdWrapper])
+
+  const nextStory = useCallback(() => {
+    onNext();
+    isMounted() && updateNextStoryIndex()
+  }, [isMounted, onNext, updateNextStoryIndex])
 
   // This sets the helper functions so that we can use it later
+  // Also dont add these functions to deps, that causes infinite rendering.
   useEffect(() => {
-    console.log(nextStory, previousStory)
     setContextValues({
-      nextStory: nextStory,
-      previousStory: previousStory
+      nextStory,
+      previousStory
     })
-  }, [])
+  }, [setContextValues])
 
-  function setCurrentIdWrapper(callback: SetStateAction<number>) {
-    setCurrentId(callback);
-    toggleState(STORY_STATE_TYPE.PAUSE, true);
-  };
-
-  const previousStory = () => {
-    onPrevious(); // We have default functions, so we dont have to check if they're undefined
-    setCurrentIdWrapper((prev: number) => (prev > 0 ? prev - 1 : prev));
-  };
-
-  const nextStory = () => {
-    onNext(); // We have default functions, so we dont have to check if they're undefined
-    // Check if component is mounted - for issue #130 (https://github.com/mohitk05/react-insta-stories/issues/130)
-    isMounted() && updateNextStoryIndex()
-  };
 
   const getVideoDuration = (duration: number) => {
     setVideoDuration(duration * 1000);
   };
 
   return (
-    <div className="container" style={{ width, height }}>
+    <div className="container" style={{ ...factStore.containerStyles }}>
       <ProgressContext.Provider
         value={{
           bufferAction: bufferAction,
@@ -82,24 +77,7 @@ export default function Container() {
         story={stories[currentId]}
         getVideoDuration={getVideoDuration}
       />
-      {!preventDefault && (
-        <div className="overlay">
-          <div
-            className="overlay__pane"
-            onTouchStart={debouncePause}
-            onTouchEnd={handleMouseUp(MOUSE_CALLBACK_TYPE.PREVIOUS)}
-            onMouseDown={debouncePause}
-            onMouseUp={handleMouseUp(MOUSE_CALLBACK_TYPE.PREVIOUS)}
-          />
-          <div
-            className="overlay__pane"
-            onTouchStart={debouncePause}
-            onTouchEnd={handleMouseUp(MOUSE_CALLBACK_TYPE.NEXT)}
-            onMouseDown={debouncePause}
-            onMouseUp={handleMouseUp(MOUSE_CALLBACK_TYPE.NEXT)}
-          />
-        </div>
-      )}
+      <Overlay pause={pause} />
     </div>
   );
 }

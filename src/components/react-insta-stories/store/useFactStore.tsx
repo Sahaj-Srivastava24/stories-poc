@@ -33,7 +33,7 @@ export type TFactsStore = {
   preventDefault: boolean;
   preloadCount: number;
 
-  setContextValues: (defaultProps: TPartialFactsStore) => void
+  setContextValues: (newState: TPartialFactsStore) => void
 };
 
 export type TPartialFactsStore = Partial<TFactsStore>;
@@ -51,7 +51,7 @@ const useFactsStore = create<TFactsStore>((set) => ({
   progressStyles: {},
   loop: true,
   defaultInterval: 4000,
-  isPaused: false,
+  isPaused: true,
   currentIndex: 0,
   onStoryStart: () => {},
   onStoryEnd: () => {},
@@ -66,9 +66,9 @@ const useFactsStore = create<TFactsStore>((set) => ({
   nextStory: () => console.log("nextStory function not set"),
   previousStory: () => console.log("previousStory function not set"),
 
-  setContextValues: (defaultProps: TPartialFactsStore) => set((state) => ({
-    ...defaultProps,
-    ...state
+  setContextValues: (newState: TPartialFactsStore) => set((defaultState) => ({
+    ...defaultState,
+    ...newState,
   }))
 }));
 

@@ -20,9 +20,9 @@ export const useCarousel = (data: TStorySet[]) => {
   let current = 0;
   let rotateYref = 0;
 
-  console.log("Current Story", currentStory)
-  console.log("Image Position", imagePosition)
-  console.log("currentStoryRef", currentStoryRef.current)
+  // console.log("Current Story", currentStory)
+  // console.log("Image Position", imagePosition)
+  // console.log("currentStoryRef", currentStoryRef.current)
 
   const nextImage = () => {
     console.log("nextImage called")

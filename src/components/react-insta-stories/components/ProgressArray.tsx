@@ -25,6 +25,7 @@ export default function ProgressArray() {
   } = useFactsStore()
   const { stories } = useStoriesContext();
 
+  console.log(pause)
 
   useEffect(() => {
     setCount(0);

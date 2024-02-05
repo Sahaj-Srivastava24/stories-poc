@@ -1,11 +1,20 @@
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useCallback, useState } from "react";
 import useFactsStore from "@/components/react-insta-stories/store/useFactStore";
 import { useStoriesContext } from "@/components/react-insta-stories/context/Stories";
+import { STORY_STATE_TYPE } from "@/components/react-insta-stories/interfaces";
 
-export default function useStoryIndex(setCurrentIdWrapper: (callback: SetStateAction<number>) => void) {
+export default function useStoryIndex(toggleState: (action: string, bufferAction?: boolean) => void) {
   const { stories } = useStoriesContext();
-  const { loop, onAllStoriesEnd } = useFactsStore();
+  const { loop, onAllStoriesEnd } = useFactsStore(state => ({
+    loop: state.loop,
+    onAllStoriesEnd: state.onAllStoriesEnd,
+  }));
   const [currentId, setCurrentId] = useState<number>(0);
+
+  const setCurrentIdWrapper = useCallback((callback: SetStateAction<number>) => {
+    setCurrentId(callback);
+    toggleState(STORY_STATE_TYPE.PAUSE, true);
+  }, [toggleState])
 
   const updateNextStoryIndex = () => {
     if (loop) {
@@ -27,7 +36,7 @@ export default function useStoryIndex(setCurrentIdWrapper: (callback: SetStateAc
 
   return {
     currentId,
-    setCurrentId,
+    setCurrentIdWrapper,
     updateNextStoryIndex
   }
 }

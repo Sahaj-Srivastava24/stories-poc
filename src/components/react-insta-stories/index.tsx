@@ -9,7 +9,7 @@ import generateStories from '@/components/react-insta-stories/util/generateStori
 import StoriesContext from '@/components/react-insta-stories/context/Stories';
 
 const FactStories = function (props: ReactInstaStoriesProps) {
-    const { setContextValues } = useFactsStore()
+    const setContextValues = useFactsStore(state => state.setContextValues)
     const renderers = props.renderers ? props.renderers.concat(defaultRenderers) : defaultRenderers;
     const [stories, setStories] = useState<{ stories: Story[] }>({ stories: generateStories(props.stories, renderers) });
 

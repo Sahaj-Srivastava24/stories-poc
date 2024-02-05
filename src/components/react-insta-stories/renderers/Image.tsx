@@ -1,26 +1,37 @@
-import * as React from "react";
+import { useState } from "react";
 import Spinner from "../components/Spinner";
-import { Renderer, Tester } from "./../interfaces";
+import { RendererProps, TesterProps } from "./../interfaces";
 import WithHeader from "./wrappers/withHeader";
 import WithSeeMore from "./wrappers/withSeeMore";
+import Image from "next/image";
 
-export const renderer: Renderer = ({ story, action, isPaused, config }) => {
-  const [loaded, setLoaded] = React.useState(false);
+export const Renderer: RendererProps = ({ story, action, isPaused, config }) => {
+  const [loaded, setLoaded] = useState(false);
   const { width, height, loader, storyStyles } = config;
   let computedStyles = {
     ...styles.storyContent,
     ...(storyStyles || {}),
   };
 
+  console.log("Inside Image Rendereres, isPaused", isPaused)
+
   const imageLoaded = () => {
     setLoaded(true);
-    action("play");
+    !isPaused && action("play");
   };
+
   return (
-    <WithHeader {...{ story, globalHeader: config.header }}>
+    <WithHeader {...{ story, globalHeader: config.header! }}>
       <WithSeeMore {...{ story, action }}>
         <div>
-          <img style={computedStyles} src={story.url} onLoad={imageLoaded} />
+          {story.url && (
+            <Image
+              alt=""
+              style={computedStyles}
+              src={story.url}
+              onLoad={imageLoaded}
+            />
+          )}
           {!loaded && (
             <div
               style={{
@@ -60,14 +71,12 @@ const styles = {
   },
 };
 
-export const tester: Tester = (story) => {
+export const tester: TesterProps = (story) => {
   return {
     condition: !story.content && (!story.type || story.type === "image"),
     priority: 2,
   };
 };
 
-export default {
-  renderer,
-  tester,
-};
+const ImageRenderer = { Renderer, tester }
+export default ImageRenderer

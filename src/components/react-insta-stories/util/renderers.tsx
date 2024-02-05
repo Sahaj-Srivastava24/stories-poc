@@ -1,6 +1,8 @@
-import { RendererProps, Story, TesterProps } from "../interfaces";
+import { RendererProps, Story, StoryRenderers } from "../interfaces";
 
-export const getRenderer = (story: Story, renderers: { renderer: RendererProps, tester: TesterProps }[]): RendererProps => {
+
+// AutoPlayContent is returned for our usecase
+export const getRenderer = (story: Story, renderers: StoryRenderers[]): RendererProps => {
     let probable = renderers.map(r => {
         return {
             ...r,
@@ -8,5 +10,5 @@ export const getRenderer = (story: Story, renderers: { renderer: RendererProps, 
         }
     }).filter(r => r.testerResult.condition);
     probable.sort((a, b) => b.testerResult.priority - a.testerResult.priority);
-    return probable[0].renderer;
+    return probable[0].Renderer;
 }

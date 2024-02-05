@@ -4,13 +4,13 @@ import { TStorySet, renderStories } from '@/helpers/story-data';
 import useStoriesStore from '@/store/useStoriesStore';
 
 type TStoryProps = {
-  isPlaying: boolean
+  isPaused: boolean
   currentSlide?: number
   storySet: TStorySet
   switchToNextStory?: () => void
 }
 
-export default function StoriesComponent({ isPlaying, currentSlide, storySet, switchToNextStory }: TStoryProps) {
+export default function StoriesComponent({ isPaused, currentSlide, storySet, switchToNextStory }: TStoryProps) {
   const { watchedStories, incrementWatchedStories } = useStoriesStore()
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function StoriesComponent({ isPlaying, currentSlide, storySet, sw
     if (!!watchedStories ?? watchedStories[storySet.hash]) {
       const indexFetchedFromLocalStorage = watchedStories[storySet.hash]
       if (indexFetchedFromLocalStorage >= storySet.stories.length - 1)
-        console.log("All stories watched, restarting from beginning", indexFetchedFromLocalStorage)
+        console.warn("CAROUSEL-ANIMATION:: All stories watched, restarting from beginning", indexFetchedFromLocalStorage)
       else return indexFetchedFromLocalStorage
 
     }
@@ -37,24 +37,22 @@ export default function StoriesComponent({ isPlaying, currentSlide, storySet, sw
     <div className='h-full w-full'>
       <Stories
         currentIndex={calculateCurrentIndex()}
-        isPaused={!isPlaying}
+        isPaused={isPaused}
         stories={renderStories(storySet.stories)}
         defaultInterval={2500}
         onStoryStart={(currIndex: number, b: object) => {
-          if (isPlaying) {
+          if (isPaused) {
             history.replaceState(null, "", '/')
             history.replaceState(null, "", `${storySet.hash}/story-${currIndex + 1}`)
           }
         }}
         onStoryEnd={(currIndex: number, b: object) => {
-          console.log(watchedStories)
-          console.log(currIndex, watchedStories[storySet.hash])
           if (currIndex >= watchedStories[storySet.hash]) {
             incrementWatchedStories(storySet.hash)
           }
         }}
         onAllStoriesEnd={() => {
-          console.log("switchToNextStories called")
+          console.info("CAROUSEL-ANIMATION:: switchToNextStories called")
           !!switchToNextStory && switchToNextStory()
         }}
         height="100%"

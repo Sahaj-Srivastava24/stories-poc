@@ -33,11 +33,11 @@ export default function StoryWrapper({ currentStory, radius, nextStory }: Wrappe
           nextStory(currentStory)
         }
         else {
-          console.log('No next story. Current story is ', currentStory)
+          console.warn('No next story. Current story is ', currentStory)
         }
       }
 
-      console.log(index, "story index")
+      // console.info(currentStory, index, "story index")
 
       return (
         <div
@@ -45,16 +45,16 @@ export default function StoryWrapper({ currentStory, radius, nextStory }: Wrappe
           style={styleObject}
           className="image-full absolute"
         >
-          {/* {currentStory === index ? (
+          {currentStory === index ? (
             <StoriesComponent
               storySet={storySet}
               // currentSlide={}
-              isPlaying={currentStory === index}
+              isPaused={currentStory !== index}
               switchToNextStory={switchToNextStory}
             />
           ) : (
-          )} */}
-          <StoryLoader />
+            <StoryLoader />
+          )}
         </div>
       )
     }

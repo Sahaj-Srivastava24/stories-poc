@@ -1,6 +1,5 @@
 import React, { CSSProperties } from 'react'
 import { create } from 'zustand';
-import { Story } from '../interfaces';
 
 
 type NumberOrString = number | string
@@ -51,7 +50,7 @@ const useFactsStore = create<TFactsStore>((set) => ({
   progressStyles: {},
   loop: true,
   defaultInterval: 4000,
-  isPaused: true,
+  isPaused: false,
   currentIndex: 0,
   onStoryStart: () => {},
   onStoryEnd: () => {},
@@ -61,10 +60,10 @@ const useFactsStore = create<TFactsStore>((set) => ({
   keyboardNavigation: true,
   preventDefault: false,
   preloadCount: 1,
-  pauseStory: () => console.log("pauseStory function not set"),
-  playStory: () => console.log("playStory function not set"),
-  nextStory: () => console.log("nextStory function not set"),
-  previousStory: () => console.log("previousStory function not set"),
+  pauseStory: () => console.error("pauseStory function not set"),
+  playStory: () => console.error("playStory function not set"),
+  nextStory: () => console.error("nextStory function not set"),
+  previousStory: () => console.error("previousStory function not set"),
 
   setContextValues: (newState: TPartialFactsStore) => set((defaultState) => ({
     ...defaultState,

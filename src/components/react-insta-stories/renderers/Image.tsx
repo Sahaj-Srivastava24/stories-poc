@@ -13,7 +13,7 @@ export const Renderer: RendererProps = ({ story, action, isPaused, config }) => 
     ...(storyStyles || {}),
   };
 
-  console.log("Inside Image Rendereres, isPaused", isPaused)
+  console.info("REACT-INSTA-STORIES:: Inside Image Rendereres, isPaused", isPaused)
 
   const imageLoaded = () => {
     setLoaded(true);
@@ -27,9 +27,9 @@ export const Renderer: RendererProps = ({ story, action, isPaused, config }) => 
           {story.url && (
             <Image
               alt=""
-              style={computedStyles}
               src={story.url}
-              onLoad={imageLoaded}
+              style={computedStyles}
+              onLoadingComplete={imageLoaded}
             />
           )}
           {!loaded && (

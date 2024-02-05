@@ -8,7 +8,7 @@ interface StoriesStore {
 }
 
 const onLocalStorageNotAvailable = () => {
-  console.log("local storage not available")
+  console.warn("LOCAL-STORAGE:: local storage not available")
   return "{}"
 }
 
@@ -18,7 +18,7 @@ const useStoriesStore = create<StoriesStore>((set, get) => ({
   initStore: (storySetIds: string[]) => {
     set((state) => {
       if(Object.keys(state.watchedStories).length > 0) {
-        console.log("We have some old cache for now, aborting initStore")
+        console.info("LOCAL-STORAGE:: We have some old cache for now, aborting initStore")
         return state
       }
 

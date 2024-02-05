@@ -32,7 +32,7 @@ const withSeeMore: React.FC<React.PropsWithChildren<{
             toggleMore={toggleMore}
             showContent={showMore}
             seeMoreContent={story.seeMore}
-            customCollapsed={customCollapsed || story.seeMoreCollapsed}
+            customCollapsed={customCollapsed || story.seeMoreCollapsed!}
           />
         </div>
       )}

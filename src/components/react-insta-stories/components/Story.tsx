@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { StoryProps, GlobalCtx } from "./../interfaces";
+import { StoryProps } from "./../interfaces";
 import useFactsStore from "../store/useFactStore";
 
 const Story = (props: StoryProps) => {
@@ -17,8 +16,13 @@ const Story = (props: StoryProps) => {
     switch (type) {
       case "UPDATE_VIDEO_DURATION":
         props.getVideoDuration(data.duration);
-        return { ack: "OK" as "OK" };
+        return { ack: "OK" as const };
+
+      default:
+        console.error("renderedMessageHandler in Story threw error")
+        return { ack: "ERROR" as const }
     }
+
   };
 
   const getStoryContent = () => {

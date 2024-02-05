@@ -25,7 +25,7 @@ export default function ProgressArray() {
   } = useFactsStore()
   const { stories } = useStoriesContext();
 
-  console.log(pause)
+  console.info("REACT-INSTA-STORIES:: pause: ", pause)
 
   useEffect(() => {
     setCount(0);

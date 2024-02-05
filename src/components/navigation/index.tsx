@@ -24,7 +24,7 @@ const NavigationWrapper: React.FC<NavigationProps> = (props) => {
       <NavigationButton
         text={"Prev"}
         cb={() => {
-          console.log("prev clicked")
+          // console.log("prev clicked")
           props.previousCallback(props.currentStory)
         }}
       />
@@ -32,7 +32,7 @@ const NavigationWrapper: React.FC<NavigationProps> = (props) => {
       <NavigationButton
         text={"Next"}
         cb={() => {
-          console.log("prev clicked")
+          // console.log("next clicked")
           props.nextCallback(props.currentStory)
         }}
       />

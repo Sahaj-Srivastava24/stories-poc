@@ -1,7 +1,7 @@
 import { getRenderer } from '@/components/react-insta-stories/util/renderers'
-import { Renderer, Story, Tester } from '@/components/react-insta-stories/interfaces';
+import { Story, StoryRenderers } from '@/components/react-insta-stories/interfaces';
 
-const generateStories = (stories: Story[], renderers: { renderer: Renderer, tester: Tester }[]) => {
+const generateStories = (stories: Story[], renderers: StoryRenderers[]) => {
   return stories.map(s => {
     let story: Story = {};
 

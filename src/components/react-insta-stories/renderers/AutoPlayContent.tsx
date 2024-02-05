@@ -9,11 +9,12 @@ export const Renderer: RendererProps = (props) => {
     }, [props])
 
     if (!!props.story?.originalContent) {
-        const Content = props.story?.originalContent;
+        const Content = props.story.originalContent;
+        console.info("REACT-INSTA-STORIES:: Inside AutoPlayContent Renderer, content rendered")
         return <Content {...props} />
     }
 
-    console.log("Inside AutoPlayContent Rendered, no content")
+    console.error("REACT-INSTA-STORIES:: Inside AutoPlayContent Renderer, no content")
     return <div />
 }
 

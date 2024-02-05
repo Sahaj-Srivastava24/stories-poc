@@ -16,10 +16,7 @@ export interface ReactInstaStoriesProps {
   defaultInterval?: number;
   isPaused?: boolean;
   currentIndex?: number;
-  renderers?: {
-    renderer: RendererProps;
-    tester: TesterProps;
-  }[];
+  renderers?: StoryRenderers[];
   onAllStoriesEnd?: Function;
   onStoryStart?: Function;
   onStoryEnd?: Function;
@@ -45,10 +42,7 @@ export interface GlobalCtx {
   defaultInterval?: number;
   isPaused?: boolean;
   currentIndex?: number;
-  renderers?: {
-    renderer: RendererProps;
-    tester: TesterProps;
-  }[];
+  renderers?: StoryRenderers[];
   onAllStoriesEnd?: Function;
   onStoryStart?: Function;
   onStoryEnd?: Function;
@@ -57,6 +51,11 @@ export interface GlobalCtx {
   keyboardNavigation?: boolean;
   preventDefault?: boolean;
   preloadCount?: number;
+}
+
+export type StoryRenderers = {
+  Renderer: RendererProps;
+  tester: TesterProps;
 }
 
 type NumberOrString = number | string;

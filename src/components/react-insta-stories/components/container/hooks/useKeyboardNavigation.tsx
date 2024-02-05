@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect } from "react";
 import useFactsStore from "@/components/react-insta-stories/store/useFactStore";
 
 export default function useKeyboardNavigation() {
-  const { pauseStory, nextStory, previousStory, keyboardNavigation } = useFactsStore((state) => ({
-    pauseStory: state.pauseStory,
+  const { nextStory, previousStory, keyboardNavigation } = useFactsStore((state) => ({
     nextStory: state.nextStory,
     previousStory: state.previousStory,
     keyboardNavigation: state.keyboardNavigation
@@ -12,8 +11,7 @@ export default function useKeyboardNavigation() {
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.code === "ArrowLeft") previousStory()
     else if (e.code === "ArrowRight") nextStory()
-    else if (e.code === "Space") pauseStory()
-  }, [nextStory, pauseStory, previousStory])
+  }, [nextStory, previousStory])
 
   useEffect(() => {
     const isClient = typeof window !== "undefined" && window.document;

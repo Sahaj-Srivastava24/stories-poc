@@ -52,3 +52,22 @@
   -webkit-animation-name: shimmerAnimation;
   -webkit-animation-timing-function: linear;
 }
+
+.shimmer-dark {
+  background: #191a32;
+  background-image: linear-gradient(
+    to right,
+    #191a32 20%,
+    #20213f 60%,
+    #191a32 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 250%;
+  display: inline-block;
+  position: relative;
+  -webkit-animation-duration: 0.9s;
+  -webkit-animation-fill-mode: forwards;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-name: shimmerAnimation;
+  -webkit-animation-timing-function: linear;
+}

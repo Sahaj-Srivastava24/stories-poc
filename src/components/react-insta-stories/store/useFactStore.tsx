@@ -6,10 +6,10 @@ type NumberOrString = number | string
 
 export type TFactsStore = {
   loop: boolean;
-  nextStory: Function
-  pauseStory: Function
-  playStory: Function
-  previousStory: Function
+  nextStory?: Function
+  pauseStory?: Function
+  playStory?: Function
+  previousStory?: Function
   onNext: Function;
   header: Function;
   isPaused: boolean;
@@ -60,10 +60,6 @@ const useFactsStore = create<TFactsStore>((set) => ({
   keyboardNavigation: true,
   preventDefault: false,
   preloadCount: 1,
-  pauseStory: () => console.error("pauseStory function not set"),
-  playStory: () => console.error("playStory function not set"),
-  nextStory: () => console.error("nextStory function not set"),
-  previousStory: () => console.error("previousStory function not set"),
 
   setContextValues: (newState: TPartialFactsStore) => set((defaultState) => ({
     ...defaultState,

@@ -18,7 +18,7 @@ const useStoriesStore = create<StoriesStore>((set, get) => ({
   initStore: (storySetIds: string[]) => {
     set((state) => {
       if(Object.keys(state.watchedStories).length > 0) {
-        console.info("LOCAL-STORAGE:: We have some old cache for now, aborting initStore")
+        // console.info("LOCAL-STORAGE:: We have some old cache for now, aborting initStore")
         return state
       }
 

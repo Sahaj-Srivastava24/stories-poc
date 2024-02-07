@@ -9,18 +9,19 @@ import Stories from '@/components/react-insta-stories';
  */
 export default function StoryLoader() {
   return (
-    <Stories
-      isPaused={true} // this does not work
-      stories={[{
-        content: () => {
-          return (
-            <div className='shimmer' />
-          )
-        }
-      }]}
-      defaultInterval={2500}
-      height="100%"
-      width="inherit"
-    />
+    // <Stories
+    //   isPaused={true} // this does not work
+    //   stories={[{
+    //     content: () => {
+    //       return (
+    //         <div className='shimmer' />
+    //       )
+    //     }
+    //   }]}
+    //   defaultInterval={2500}
+    //   height="100%"
+    //   width="inherit"
+    // />
+    <div className='shimmer-dark w-full h-full' />
   )
 }

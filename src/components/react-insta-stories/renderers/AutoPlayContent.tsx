@@ -10,7 +10,7 @@ export const Renderer: RendererProps = (props) => {
 
     if (!!props.story?.originalContent) {
         const Content = props.story.originalContent;
-        console.info("REACT-INSTA-STORIES:: Inside AutoPlayContent Renderer, content rendered")
+        // console.info("REACT-INSTA-STORIES:: Inside AutoPlayContent Renderer, content rendered")
         return <Content {...props} />
     }
 

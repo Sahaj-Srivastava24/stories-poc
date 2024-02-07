@@ -1,5 +1,5 @@
 import "./container.css"
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Story from "@/components/react-insta-stories/components/Story";
 import ProgressContext from "@/components/react-insta-stories/context/Progress";
 import useFactsStore from "@/components/react-insta-stories/store/useFactStore";
@@ -25,6 +25,7 @@ export default function Container() {
 
   const isMounted = useIsMounted();
   const { stories } = useStoriesContext();
+  const setFunctionsToGlobalStore = useRef<boolean>(false)
   const { onNext, onPrevious, setContextValues } = factStore;
   const { pause, toggleState, bufferAction } = useStoryPause();
   const [videoDuration, setVideoDuration] = useState<number>(0);
@@ -46,16 +47,21 @@ export default function Container() {
   // This sets the helper functions so that we can use it later
   // Also dont add these functions to deps, that causes infinite rendering.
   useEffect(() => {
+    if(!setFunctionsToGlobalStore.current){
     setContextValues({
       nextStory,
       previousStory
     })
-  }, [setContextValues])
+    setFunctionsToGlobalStore.current = true
+  }
+  }, [])
 
 
   const getVideoDuration = (duration: number) => {
     setVideoDuration(duration * 1000);
   };
+
+  console.log(pause)
 
   return (
     <div className="container" style={{ ...factStore.containerStyles }}>

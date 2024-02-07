@@ -37,7 +37,7 @@ export default function StoryWrapper({ currentStory, radius, nextStory }: Wrappe
         }
       }
 
-      // console.info(currentStory, index, "story index")
+      console.info(currentStory, index, "story index")
 
       return (
         <div

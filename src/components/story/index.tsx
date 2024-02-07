@@ -33,6 +33,7 @@ export default function StoriesComponent({ isPaused, currentSlide, storySet, swi
     return 0
   }
 
+  console.log("Outside stories component", isPaused)
   return (
     <div className='h-full w-full'>
       <Stories
@@ -52,7 +53,7 @@ export default function StoriesComponent({ isPaused, currentSlide, storySet, swi
           }
         }}
         onAllStoriesEnd={() => {
-          console.info("CAROUSEL-ANIMATION:: switchToNextStories called")
+          // console.info("CAROUSEL-ANIMATION:: switchToNextStories called")
           !!switchToNextStory && switchToNextStory()
         }}
         height="100%"
